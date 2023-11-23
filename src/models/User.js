@@ -27,7 +27,10 @@ const User = sequelize.define('Users', {
   }
 }, {
   tableName: 'Users',
-  indexes: [{ unique: true, fields: ['email'] }]
+  indexes: [{ unique: true, fields: ['email'] }],
+  defaultScope: {
+    attributes: { exclude: ['password', 'id_status'] }
+  }
 })
 User.belongsTo(Status, { foreignKey: 'id_status' })// Un usuario pertenece a un estado
 
