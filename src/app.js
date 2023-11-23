@@ -6,6 +6,6 @@ const app = express()
 // Middlewares
 app.use(express.json())
 
-app.use(statusRoutes)
+app.use('/api', statusRoutes)
 
 module.exports = app
