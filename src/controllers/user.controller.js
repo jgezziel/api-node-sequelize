@@ -2,6 +2,7 @@ const validator = require('validator')
 const bcrypt = require('bcrypt')
 const User = require('../models/User')
 const Status = require('../models/Status')
+const jwt = require('../services/jwt')
 
 const controller = {
   readUsers: async (req, res) => {
@@ -80,6 +81,7 @@ const controller = {
           }
 
           const newUser = await User.create({ fname, lname, email, password: hash })
+          newUser.password = undefined // remove password from response
           res.status(201).json({
             status: 'success',
             code: 201,
@@ -98,8 +100,77 @@ const controller = {
     } catch (error) {
       res.status(500).json({ message: error.message })
     }
-  }
+  },
+  updateUser: async (req, res) => {
+    try {
+      res.status(200).json({
+        status: 'success',
+        code: 200,
+        message: 'User updated'
+      })
+    } catch (error) {
+      res.status(500).json({ message: error.message })
+    }
+  },
+  loginUser: async (req, res) => {
+    try {
+      const { email, password } = req.body
 
+      const errors = []
+
+      const validateEmail = validator.isEmail(email) && !validator.isEmpty(email)
+      const validatePassword = !validator.isEmpty(password)
+
+      if (!validateEmail) { errors.push('Email must be a valid email.') }
+      if (!validatePassword) { errors.push('Password is empty') }
+      if (!validateEmail || !validatePassword) {
+        return res.status(400).json({
+          status: 'error',
+          code: 400,
+          message: 'User data validation incorrect, please try again.',
+          errors
+        })
+      }
+
+      try {
+        const user = await User.scope('withPassword').findOne({ where: { email } })
+        if (!user) {
+          return res.status(404).json({
+            status: 'error',
+            code: 404,
+            message: 'User not found'
+          })
+        }
+        bcrypt.compare(password, user.password, (err, result) => {
+          if (err) {
+            return res.status(401).json({
+              status: 'error',
+              code: 401,
+              message: 'Authentication failed'
+            })
+          }
+
+          if (result) {
+            return res.cookie('token', jwt.createToken(user)).status(200).json({
+              status: 'success',
+              code: 200,
+              message: 'Authentication successful'
+            })
+          } else {
+            return res.status(401).json({
+              status: 'error',
+              code: 401,
+              message: 'Credentials incorrect'
+            })
+          }
+        })
+      } catch (error) {
+        res.status(500).json({ message: error.message })
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message })
+    }
+  }
 }
 
 module.exports = controller
