@@ -103,11 +103,55 @@ const controller = {
   },
   updateUser: async (req, res) => {
     try {
-      res.status(200).json({
-        status: 'success',
-        code: 200,
-        message: 'User updated'
-      })
+      const { fname, lname, email } = req.body
+      const errors= []
+
+      const validateFname = !validator.isEmpty(fname)
+      const validateLname = !validator.isEmpty(lname)
+      const validateEmail = !validator.isEmpty(email) && validator.isEmail(email)
+
+      if (!validateFname) { errors.push('First name must contain only letters.') }
+      if (!validateLname) { errors.push('Last name must contain only letters.') }
+      if (!validateEmail) { errors.push('Email must be a valid email.') }
+      if (validateFname && validateLname && validateEmail) {
+        if (req.user.email !== email) {
+          const emailExist = await User.findOne({ where: { email } })
+          if (emailExist) {
+            return res.status(400).json({
+              status: 'error',
+              code: 400,
+              message: 'Email not modified, email already exists'
+            })
+          }
+        }
+
+        try {
+          const userID = req.user.sub
+          console.log(userID)
+          const updatedUser = await User.update({ fname, lname, email }, { where: { id: userID } })
+          if (!updatedUser) {
+            return res.status(404).json({
+              status: 'error',
+              code: 404,
+              message: 'Error updating user'
+            })
+          }
+          return res.status(200).json({
+            status: 'success',
+            code: 200,
+            message: 'User updated'
+          })
+        } catch (error) {
+          return res.status(500).json({ message: error.message })
+        }
+      } else {
+        return res.status(400).json({
+          status: 'error',
+          code: 400,
+          message: 'User data validation incorrect, please try again.',
+          errors
+        })
+      }
     } catch (error) {
       res.status(500).json({ message: error.message })
     }
