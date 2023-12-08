@@ -1,7 +1,7 @@
 const app = require('./app')
 const sequelize = require('./database/database')
 
-const PORT = process.env.PORT ?? 3000
+const PORT = process.env.PORT ?? 3001
 
 const main = async () => {
   try {
@@ -29,6 +29,4 @@ const createTables = async () => {
 /* TODO
 1.implement validator in all controllers
 2.create controller for upload image in USER controller Class 230
-3.implement JWT in all controllers
-4.implement in controllers not repeat data in database Class 141
 */
