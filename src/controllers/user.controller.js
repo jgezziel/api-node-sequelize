@@ -80,14 +80,18 @@ const controller = {
             return res.status(500).json({ message: err.message })
           }
 
-          const newUser = await User.create({ fname, lname, email, password: hash })
-          newUser.password = undefined // remove password from response
-          res.status(201).json({
-            status: 'success',
-            code: 201,
-            message: 'User created',
-            data: newUser
-          })
+          try {
+            const newUser = await User.create({ fname, lname, email, password: hash })
+            newUser.password = undefined // remove password from response
+            res.status(201).json({
+              status: 'success',
+              code: 201,
+              message: 'User created',
+              data: newUser
+            })
+          } catch (error) {
+            return res.status(500).json({ message: error.message })
+          }
         })
       } else {
         return res.status(400).json({
@@ -104,7 +108,7 @@ const controller = {
   updateUser: async (req, res) => {
     try {
       const { fname, lname, email } = req.body
-      const errors= []
+      const errors = []
 
       const validateFname = !validator.isEmpty(fname)
       const validateLname = !validator.isEmpty(lname)
@@ -152,6 +156,37 @@ const controller = {
           errors
         })
       }
+    } catch (error) {
+      res.status(500).json({ message: error.message })
+    }
+  },
+  deleteUser: async (req, res) => {
+    try {
+      const userID = req.user.sub
+      const { id } = req.params
+
+      if (userID !== parseInt(id)) {
+        return res.status(403).json({
+          status: 'error',
+          code: 403,
+          message: 'credentials incorrect for this user'
+        })
+      }
+
+      const deletedUser = await User.destroy({ where: { id: userID } })
+      if (!deletedUser) {
+        return res.status(404).json({
+          status: 'error',
+          code: 404,
+          message: 'Error deleting user'
+        })
+      }
+
+      return res.status(200).json({
+        status: 'success',
+        code: 200,
+        message: 'User deleted'
+      })
     } catch (error) {
       res.status(500).json({ message: error.message })
     }

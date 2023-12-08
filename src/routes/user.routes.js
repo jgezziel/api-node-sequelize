@@ -8,7 +8,7 @@ router.get('/users', UserController.readUsers)
 router.get('/user/:id', UserController.readUserById)
 router.post('/user', UserController.createUser)
 router.put('/user/:id', mdJwt.auth, UserController.updateUser)
-// router.delete('/user/:id', UserController.deleteUser)
+router.delete('/user/:id', mdJwt.auth, UserController.deleteUser)
 router.post('/login', UserController.loginUser)
 
 module.exports = router
