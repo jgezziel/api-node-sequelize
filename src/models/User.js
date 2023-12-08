@@ -28,6 +28,8 @@ const User = sequelize.define('Users', {
 }, {
   tableName: 'Users',
   indexes: [{ unique: true, fields: ['email'] }],
+  paranoid: true,
+  deletedAt: 'destroyTime',
   defaultScope: {
     attributes: { exclude: ['password', 'id_status'] }
   },
