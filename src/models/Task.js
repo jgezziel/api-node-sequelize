@@ -3,7 +3,7 @@ const sequelize = require('../database/database')
 const User = require('./User')
 const Status = require('./Status')
 
-const Task = sequelize.define('Tasks', {
+const Task = sequelize.define('tasks', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -13,12 +13,16 @@ const Task = sequelize.define('Tasks', {
     type: DataTypes.STRING(200),
     allowNull: false
   },
+  coverImage: {
+    type: DataTypes.STRING(200)
+  },
   done: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
   id_user: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   id_status: {
     type: DataTypes.INTEGER

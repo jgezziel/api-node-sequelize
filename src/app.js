@@ -3,6 +3,7 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const statusRoutes = require('./routes/status.routes')
 const userRoutes = require('./routes/user.routes')
+const taskRoutes = require('./routes/task.routes')
 const morgan = require('morgan')
 
 const app = express()
@@ -19,5 +20,6 @@ app.use(morgan('dev'))
 
 app.use('/api', statusRoutes)
 app.use('/api', userRoutes)
+app.use('/api', taskRoutes)
 
 module.exports = app
