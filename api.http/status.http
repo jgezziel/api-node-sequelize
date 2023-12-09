@@ -1,0 +1,33 @@
+###
+@Port= 6351
+@Host= http://localhost:{{Port}}
+
+### GET read Status
+GET {{Host}}/api/status
+Content-Type: application/json
+
+### GET read Status by ID
+@IDread= 1
+GET {{Host}}/api/status/{{IDread}}
+Content-Type: application/json
+
+### POST create Status
+POST {{Host}}/api/status
+Content-Type: application/json
+
+{
+    "description": "Bloqueado"
+}
+
+### PUT update Status
+@IDupdate= 3
+PUT {{Host}}/api/status/{{IDupdate}}
+Content-Type: application/json
+
+{
+    "description": "Cancelado"
+}
+
+### DELETE delete Status
+@IDdelete= 3
+DELETE {{Host}}/api/status/{{IDdelete}}
