@@ -25,9 +25,3 @@ const createTables = async () => {
   console.log('Tables have been created successfully. ✔ ')
 }// create tables
 */
-
-/* TODO
-1.implement validator in all controllers
-2.create controller for upload image in TASK controller Class 230
-3.create controller for update and delete task
-*/
