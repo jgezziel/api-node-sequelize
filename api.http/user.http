@@ -1,0 +1,53 @@
+###
+@Port= 6351
+@Host= http://localhost:{{Port}}
+
+### GET Read Users
+GET {{Host}}/api/users
+Content-Type: application/json
+
+### GET Read User by ID
+@IDread= 1
+GET {{Host}}/api/user/{{IDread}}
+Content-Type: application/json
+
+### POST Create User
+POST {{Host}}/api/user
+Content-Type: application/json
+
+{
+    "fname": "John",
+    "lname": "Doe",
+    "email": "jonh@gmail.com",
+    "password": "@jD123456@"
+}
+
+###POST Login User
+POST {{Host}}/api/login
+Content-Type: application/json
+
+{
+    "email": "jonh@gmail.com",
+    "password": "@jD123456@"
+}
+
+
+### PUT Update User
+@Token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsIm5hbWUiOiJKb2huIiwibG5hbWUiOiJEb2UiLCJlbWFpbCI6ImpvbmhAZ21haWwuY29tIiwiaWF0IjoxNzAyMTQzMTkxLCJleHAiOjE3MDI3NDc5OTF9.DUlLssMxA4XsPuSgzZm15P1BNFjpgXog9mB8_qxHgv8
+@IDupdate= 2
+
+PUT {{Host}}/api/user/{{IDupdate}}
+Content-Type: application/json
+Cookie: token={{Token}}
+
+{
+    "fname": "John",
+    "lname": "Doe",
+    "email": "jonh.doe@gmail.com"
+}
+
+### DELETE Delete User
+@IDdelete= 2
+DELETE {{Host}}/api/user/{{IDdelete}}
+Content-Type: application/json
+Cookie: token={{Token}}
