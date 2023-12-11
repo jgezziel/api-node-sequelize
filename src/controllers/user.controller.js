@@ -131,7 +131,6 @@ const controller = {
 
         try {
           const userID = req.user.sub
-          console.log(userID)
           const updatedUser = await User.update({ fname, lname, email }, { where: { id: userID } })
           if (!updatedUser) {
             return res.status(404).json({
@@ -164,6 +163,8 @@ const controller = {
     try {
       const userID = req.user.sub
       const { id } = req.params
+
+      console.log(userID, id)
 
       if (userID !== parseInt(id)) {
         return res.status(403).json({
